@@ -1,4 +1,4 @@
-# @adp Shared-UI
+# @adp profile-app
 
 Shared UI Components
 
