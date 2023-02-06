@@ -29,7 +29,7 @@ function App() {
           username: user.name,
           avatarUrl: user.picture,
           onLogout: logout,
-          profileUrl: import.meta.env.VITE_PROFILE_APP_URL,
+          profileUrl: "/",
         }}
       />
 
