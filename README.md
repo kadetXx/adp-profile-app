@@ -1,6 +1,6 @@
 # @adp profile-app
 
-Shared UI Components
+User profile application
 
 ## Getting Started
 
