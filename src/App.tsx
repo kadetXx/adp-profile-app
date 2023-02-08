@@ -1,4 +1,8 @@
+import { io } from "socket.io-client";
 import { useAuth } from "./hooks/useAuth";
+import { StyledContainer, StyledDivider } from "./App.styles";
+import { Checkmark } from "./components/Checkmark";
+import { Cancel } from "./components/Cancel";
 import {
   globalStyles,
   Loader,
@@ -8,14 +12,13 @@ import {
   Text,
   Button,
 } from "@adp/common";
-import { StyledContainer, StyledDivider } from "./App.styles";
-import { Checkmark } from "./components/Checkmark";
-import { Cancel } from "./components/Cancel";
+
+const socket = io(import.meta.env.VITE_ADP_SERVER_URL);
 
 function App() {
   globalStyles();
 
-  const { user, isAuthenticated, isLoading, logout } = useAuth();
+  const { user, isAuthenticated, isLoading, logout } = useAuth(socket);
 
   if (isLoading || !isAuthenticated || !user) {
     return <Loader fullScreen />;
@@ -27,8 +30,11 @@ function App() {
         profile={{
           username: user.name,
           avatarUrl: user.picture,
-          onLogout: logout,
           profileUrl: "/",
+          onLogout: () => {
+            socket.emit("logout", user.email);
+            logout();
+          },
         }}
       />
 

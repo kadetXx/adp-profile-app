@@ -1,8 +1,24 @@
-import { useAuth0 } from "@auth0/auth0-react";
 import React, { useEffect } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
+import { Socket } from "socket.io-client";
 
-export const useAuth = () => {
+export const useAuth = (socket: Socket) => {
   const { user, isAuthenticated, isLoading, logout } = useAuth0();
+
+  useEffect(() => {
+    if (!user?.email) return;
+
+    /**
+     * websocket events to emit login to server
+     * and to listen for logout from meeting app
+     */
+    socket.emit("login", user.email);
+    socket.on("logout", logout);
+
+    return () => {
+      socket.off(user.email);
+    };
+  }, [user]);
 
   useEffect(() => {
     const shouldRedirect = !isLoading && !isAuthenticated;
